@@ -69,18 +69,25 @@ class CreditScoreCalculatorView(generics.CreateAPIView):
             r = (interest_rate / 100) / 12  
             n = tenure  
             monthly_repayment = (loan_amount * r * (1 + r) ** n) / ((1 + r) ** n - 1)
+            if(current_emi_amount+monthly_repayment > 0.5* monthly_salary):
+                return Response({'credit_score': credit_score,'Loan_status':'Sorry your loan cant be approved as your montly income is less'}, status=status.HTTP_200_OK)
             return Response({'Customer id':customer_id,'credit_score': credit_score,'Interest rate':interest_rate,'Updated Interest rate':interest_rate,'Tenure':tenure,'montly_repayment':monthly_repayment,'Loan status':'you can take loan at your interest rate','For confirming': f'http://127.0.0.1:8000/create-loan/{customer_id}/{loan_amount}/{interest_rate}/{tenure}/'}, status=status.HTTP_200_OK)
         elif(30<=credit_score<50):
             r = (max(12,interest_rate) / 100) / 12  
             n = tenure  
             monthly_repayment = (loan_amount * r * (1 + r) ** n) / ((1 + r) ** n - 1)
             # monthly_repayment=0
+            if(current_emi_amount+monthly_repayment > 0.5* monthly_salary):
+                return Response({'credit_score': credit_score,'Loan_status':'Sorry your loan cant be approved as your montly income is less'}, status=status.HTTP_200_OK)
             return Response({'Customer id':customer_id,'credit_score': credit_score,'Interest rate':interest_rate,'Updated Interest rate':max(12,interest_rate),'Tenure':tenure,'montly_repayment':monthly_repayment,'Loan status':'you can take loan at interest rate greater than 12','For confirming': f'http://127.0.0.1:8000/create-loan/{customer_id}/{loan_amount}/{12}/{tenure}/'}, status=status.HTTP_200_OK)
         elif(10<=credit_score<30):
                 r = (max(16,interest_rate) / 100) / 12  
                 n = tenure 
                 monthly_repayment = (loan_amount * r * (1 + r) ** n) / ((1 + r) ** n - 1)
                 # monthly_repayment=0
+                if(current_emi_amount+monthly_repayment > 0.5* monthly_salary):
+                    return Response({'credit_score': credit_score,'Loan_status':'Sorry your loan cant be approved as your montly income is less'}, status=status.HTTP_200_OK)
+
                 return Response({'Customer id':customer_id,'credit_score': credit_score,'Interest rate':interest_rate,'Updated Interest rate':max(16,interest_rate),'Tenure':tenure,'montly_repayment':monthly_repayment,'Loan status':'you can take loan at interest rate greater than 16','For confirming': f'http://127.0.0.1:8000/create-loan/{customer_id}/{loan_amount}/{16}/{tenure}/'}, status=status.HTTP_200_OK)
         else:
             return Response({'credit_score': credit_score,'Loan_status':'Sorry your loan cant be approved'}, status=status.HTTP_200_OK)
