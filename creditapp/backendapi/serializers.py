@@ -5,7 +5,7 @@ from rest_framework import serializers
 from .models import CustomersInfo,LoanInfo
 
 class CustomerSerializer(serializers.ModelSerializer):
-    # Define additional fields
+    
     customer_id = serializers.SerializerMethodField()
     approved_limit = serializers.SerializerMethodField()
 
@@ -14,15 +14,14 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ['first_name','last_name', 'age', 'monthly_salary', 'phone_number', 'customer_id', 'approved_limit']
 
     def get_customer_id(self, obj):
-        # Generate a random 10-character customer_id
+        
         return ''.join(random.choices('0123456789', k=10))
 
     def get_approved_limit(self, obj):
-        # Calculate the approved limit based on the given formula
-        return round(36 * obj.monthly_salary, -5)  # Round to the nearest lakh
+        
+        return round(36 * obj.monthly_salary, -5)
 
     def create(self, validated_data):
-        # Set phone_number, monthly_salary, age, approved_limit, and customer_id
         validated_data['phone_number'] = validated_data['phone_number']
         validated_data['monthly_salary'] = validated_data['monthly_salary']
         validated_data['age'] = validated_data['age']
